@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+ 		<meta charset="utf-8">
+   		<style>
+  			div {
+   				margin-top: 100px;
+   				font-size: 130px;
+   				color: violet;
+   				text-align: center;
+  				}
+  		</style>
+  		<title>単語確認テスト</title>
+ 	</head>
+ 	<body>
+		<input type="button" value="次の問題" onclick="changeText()">
+  		<div id="textdiv">
+   			問題開始
+  		</div>
+
+		<script>
+			let result = []; // 最終的な二次元配列を入れるための配列
+			let cnt = 0;
+			let flg = 0;
+			
+	  		//CSVファイルを読み込む関数getCSV()の定義
+			function getCSV(){
+    			let req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
+    			req.open("get", "tango.csv", true); // アクセスするファイルを指定   
+				req.send(null); // HTTPリクエストの発行
+    			// レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ	
+    			req.onload = function(){
+					convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
+    			}
+			}
+ 
+			// 読み込んだCSVデータを二次元配列に変換する関数convertCSVtoArray()の定義
+			function convertCSVtoArray(str){ // 読み込んだCSVデータが文字列として渡される
+    			let tmp = str.split("\n"); // 改行を区切り文字として行を要素とした配列を生成
+ 
+				// 各行ごとにカンマで区切った文字列を要素とした二次元配列を生成
+				for(let i=0;i<tmp.length;++i){
+					result[i] = tmp[i].split(',');
+				}
+			}
+			
+			// ボタンを押されたら表示を変える関数
+			function changeText() {
+			 	let pDiv = document.getElementById("textdiv");
+				pDiv.innerHTML = result[cnt][flg];
+				if (flg == 0){
+					flg = 1;
+				}
+				else{
+					cnt++;
+					flg = 0;
+				}
+				if(cnt == result.length){
+					cnt = 0;
+				}
+			}
+			
+			getCSV(); //最初に実行される
+			
+  </script>
+ </body>
+</html>
