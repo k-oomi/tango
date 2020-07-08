@@ -1,0 +1,80 @@
+body{
+    font-family: "Helvetica Neue", Helvetica, Arial, "游ゴシック体", "Yu Gothic", YuGothic, "Hiragino Kaku Gothic ProN", Meiryo, 'Open Sans', sans-serif;
+    min-height: 100vh;
+    display: grid;
+    grid-template:
+    "... ...... ...... ...... ...... ...... ..." 
+    "... header header header header header ..." 80px
+    "... ...... ...... ...... ...... ...... ..." 15px
+    "... left   left   left   left   left   ..." 150px
+    "... ...... ...... ...... ...... ...... ..." 
+    "... center center center ...... right  ..." 1fr
+    "... ...... ...... ...... ...... ...... ..." 
+    /auto 1fr auto  1fr 25px 250px auto;
+}
+header{
+    background-color: aquamarine;
+    /* outline: 1px solid black; */
+
+    grid-area: header;
+}
+a{
+    color: black;
+}
+#textdiv_1{
+    color: rgb(102, 156, 134);
+    border-bottom: rgb(102, 156, 134);
+}
+main{
+    /* background-color: aquamarine; */
+    /* outline: 1px solid black; */
+    grid-area: center;
+
+}
+
+#nav {
+    /* background-color: aquamarine;
+    outline: 1px solid black; */
+    grid-area: left;
+}
+aside{
+    /* background-color: aquamarine;
+    outline: 1px solid black; */
+    grid-area: right;
+}
+span{
+    text-align: center;
+}
+
+p#cnt {
+    margin-top: 3rem;
+}
+@media screen and (max-width: 1000px){
+    body{
+        grid-template:
+            "header" 150px
+            "left  " 
+            "center" 1fr
+            "right " 250px
+            "......" 5%
+    }
+    .btn-outline-success{
+        padding:8px;
+        font-size:25px;
+    }
+}
+@media screen and (max-width: 780px){
+    body{
+        grid-template:
+            "header" 150px
+            "left  " 
+            "center" 1fr
+            "right " 250px
+            "......" 5%
+    }
+    .btn-outline-success{
+        padding:8px;
+        font-size:25px;
+    }
+}
+
