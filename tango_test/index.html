@@ -8,26 +8,35 @@
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="style_1.css">
+    <link rel="stylesheet" href="style_2.css">
     <meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 </head>
 
 <body class="container">
-    <header class="bg-secondary navbar-dark">
-        <nav class="navbar navbar-expand-sm">
-            <ul class="navbar-nav">
-                <li calss="nav-item active"><a href="" class="navbar-brand">Top</a></li>
-                <li calss="nav-item active"><a href="" class="navbar-brand">Edit</a></li>
-                <li calss="nav-item active"><a href="" class="navbar-brand">login</a></li>
-                <li calss="nav-item active"><a href="" class="navbar-brand">logout</a></li>
+    <header class="navbar-dark header">
+        <nav class="navbar navbar-expand-sm global-nav">
+            <ul class="navbar-nav global-nav__list">
+                <li calss="nav-item active global-nav__item"><a href="" class="navbar-brand">Top</a></li>
+                <li calss="nav-item active global-nav__item"><a href="" class="navbar-brand">Edit</a></li>
+                <li calss="nav-item active global-nav__item"><a href="" class="navbar-brand">login</a></li>
+                <li calss="nav-item active global-nav__item"><a href="" class="navbar-brand">logout</a></li>
+                <li calss="nav-item active global-nav__item"><a href="" class="navbar-brand">git_test</a></li>
             </ul>
         </nav>
+        <div class="hamburger" id="js-hamburger">
+            <span class="hamburger__line hamburger__line--1"></span>
+            <span class="hamburger__line hamburger__line--2"></span>
+            <span class="hamburger__line hamburger__line--3"></span>
+          </div>
+          <div class="black-bg" id="js-black-bg"></div>
     </header>
     <main>
 
         <div id="card">
             <div class="card-body">
-                <h2 id="textdiv_1" class="text-center font-weight-bold">　</h2>
-                <p class="border-bottom text-center"><span id="textdiv_2">　</span></p>
+                <h2 id="textdiv_1" class="text-center font-weight-bold">IBM</h2>
+                <p class="border-bottom text-center"><span id="textdiv_2">テスト</span></p>
                 <p class="border-bottom text-center"><span id="textdiv_3">　</span></p>
                 <p class="border-bottom text-center"><span id="textdiv_4">　</span></p>
                 <p class="border-bottom text-center"><span id="textdiv_5">　</span></p>
@@ -45,7 +54,7 @@
     </div>
     <aside>
         <div id="qus" class="mx-auto">
-            <P id="cnt">　</P>
+            <P id="cnt">10問/50問</P>
             <button type="button" class="btn btn-outline-success w-100" onclick="changeText()">START</button>
             <button type="button" class="btn btn-outline-success w-100 mt-3" onclick="Reset()">Reset</button>
 
@@ -54,6 +63,24 @@
 </body>
 <script>
     'use strict';
+    function toggleNav() {
+  var body = document.body;
+  var hamburger = document.getElementById('js-hamburger');
+  var blackBg = document.getElementById('js-black-bg');
+ 
+ 
+
+
+  hamburger.addEventListener('click', function() {
+    body.classList.toggle('nav-open');
+    // style.color = 'black';
+   
+  });
+  blackBg.addEventListener('click', function() {
+    body.classList.remove('nav-open');
+  });
+}
+toggleNav();
     //*****************************************************************
     // 宣言エリア
     //*****************************************************************
