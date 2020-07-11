@@ -13,7 +13,7 @@ body{
     /auto 1fr auto  1fr 25px 250px auto;
 }
 header{
-    background-color: aquamarine;
+    background-color: rgb(114, 110, 110);
     /* outline: 1px solid black; */
 
     grid-area: header;
@@ -48,33 +48,5 @@ span{
 
 p#cnt {
     margin-top: 3rem;
-}
-@media screen and (max-width: 1000px){
-    body{
-        grid-template:
-            "header" 150px
-            "left  " 
-            "center" 1fr
-            "right " 250px
-            "......" 5%
-    }
-    .btn-outline-success{
-        padding:8px;
-        font-size:25px;
-    }
-}
-@media screen and (max-width: 780px){
-    body{
-        grid-template:
-            "header" 150px
-            "left  " 
-            "center" 1fr
-            "right " 250px
-            "......" 5%
-    }
-    .btn-outline-success{
-        padding:8px;
-        font-size:25px;
-    }
 }
 
