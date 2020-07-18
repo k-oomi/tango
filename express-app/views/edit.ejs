@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+	<meta charset="utf-8">
+	<style>
+
+		.nav{
+			margin-top: 10px;
+			font-size: 20px;
+			width: 100%;
+		}
+		.table_box {
+			margin-top: 100px;
+			font-size: 15px;
+			color: black;
+			text-align: center;
+			/* width: 1200px; */
+		}
+
+		table {
+			border-collapse: collapse;
+			table-layout:fixed;
+			width: 1200px;
+			border: 0px none;
+			
+		}
+		/* table tr:hover{
+			background-color: #D3DEF1;
+		} */
+
+		th {
+			border: solid 1px #808080;
+			padding: 0.5em;
+			background-color: #C0C0C0;
+		}
+
+		td {
+			border: solid 1px #808080;
+			padding: 0.5em;
+		}
+
+		table tr:nth-child(even){
+			background-color: #eee
+		}
+
+		.a{
+			width: 100px;
+		}
+		.b{
+			width: 300px;
+		}
+		.c{
+			width: 300px;
+		}
+		.d{
+			width: 400px;
+		}
+		.e{
+			width: 100px;
+		}
+
+	</style>
+	<title>CSV読み取り</title>
+</head>
+
+<body>
+	<div class="nav">
+		<!-- ファイル選択 -->
+		<input id="file" name="file" type="file"  accept="text/csv" />
+
+
+		<!-- 保存ボタンが押された際に、saveCsv()の処理で
+				valueに編集データが入りdelete.jsにPOSTする -->
+		<button id="save" onclick="saveCsv();">保存する</button>
+		<form method="POST" name="post">
+			<input id="send" type="hidden" name="data" value="">
+			<input id="name" type="hidden" name="name" value="">
+		</form>
+	</div>
+
+
+
+	<!-- テーブル表示：convertCSVtoArray()でタグの中にテーブル要素が入る -->
+	<div class="table_box">
+		<table id="T_lavel" >
+			<tr>
+				<th class="a">略 語</th>
+				<th class="b">フルスペル</th>
+				<th class="c">カタカナ</th>
+				<th class="d">意 味</th>
+				<th class="e">頻 度</th>
+		  </tr>
+		</table>
+
+		<table id="T_data" ></table>
+	</div>
+	<button id="row" onclick="newRow();"></button>
+
+
+	<script>
+		//初期表示は非表示
+		document.getElementById("save").style.display = "none";
+		document.getElementById("T_lavel").style.display = "none";
+		document.getElementById("row").style.display = "none";
+
+		//*****************************************************************
+		// ファイルの読み込み 
+		//**************************************************************
+
+
+		//windowオブジェクトを対象要素として、'DOMContentLoaded'(DOMの読み込み完了時)のイベントが発生した時に、function関数内の処理を実行する
+		window.addEventListener('DOMContentLoaded', function() {
+
+			//*****************ファイル名を取得************************//
+			// fileのHTML要素を取得して、変化があれば処理を実行するメソッド
+			document.querySelector("#file").addEventListener('change', function(e) {
+				// ブラウザーがFile APIを利用できるか確認
+				if (window.File) {
+					// 指定したファイル名を取得して変数inputに入れる
+					let input = document.querySelector('#file').files[0];
+					// 変数inputのname要素をinputタグのvalueの中身に入れる
+					document.querySelector('#name').value = input.name;	
+				}
+			}, true);
+
+			//**************CSVファイルの中身を読み込む**********************//
+			//HTMLタグで指定したidにマッチするドキュメント要素を取得
+			let fileInput = document.getElementById("file");
+			//PC内にあるファイルを読み取るFileReaderオブジェクトを生成する
+			let fileReader = new FileReader();
+			//onchangeは、inputタグにファイルを指定した際のchangeイベントを処理するイベントハンドラ
+			fileInput.onchange = () => {
+				//選択したファイルを配列で渡すのでfileInput.files[0]として1つ目のファイルを取得
+				let file = fileInput.files[0];
+				//readAsText()ファイルの読み込みを開始
+				fileReader.readAsText(file);
+			};
+	
+			//onload：ファイルの読み込みが終わった際に呼ばれるloadイベントを処理するイベントハンドラ
+			//読み込みが完了すると、fileReaderのresultに読み込んだファイルの内容が格納(CSVデータ) 
+			fileReader.onload = function () {
+				convertCSVtoArray(fileReader.result);
+			}
+		});
+
+
+
+
+		//*****************************************************************
+		// convertCSVtoArray() 読み込んだCSVデータを二次元配列に変換する関数 
+		//**************************************************************
+		//* 読み込んだCSVデータが文字列として渡される
+
+		function convertCSVtoArray(str) { // 読み込んだCSVデータが文字列として渡される
+
+			// 最終的な二次元配列を入れるための配列
+			let result = [];
+			let tmp2 = [];
+
+			// 改行コードを区切り文字として行を要素とした配列を生成
+			let tmp = str.split("\n");
+
+			// 各行ごとにカンマで区切った文字列を要素とした二次元配列を生成
+			for (let i = 0; i < tmp.length; ++i) {
+				tmp2[i] = tmp[i].split(',');
+			}
+			
+			
+			//値がない行or最初の要素が無い行を消去する
+			let newCnt=-1; //新しい配列の要素番号
+			for (let i = 0; i < tmp2.length; ++i) {
+				if (tmp2[i][0] !== "") {
+					newCnt++;
+					result[newCnt]=tmp2[i];
+				}
+			}
+			console.log(result);
+
+			//フィールドが入る空の配列
+			let fieldCount = [];
+
+			//④行の最初に<tr>、最後に</tr>を加える
+			//contenteditable=true 編集可能
+			for (let i = 0; i < result.length; ++i) {
+				for (let j = 0; j < result[i].length; ++j) {
+					if (j == 0) {
+						fieldCount += '<tr><td contenteditable=true class="a">' + result[i][j] + '</td>';
+					} else if (j == 1) {
+						fieldCount += '<td contenteditable=true class="b">' + result[i][j] + '</td>';
+					} else if (j == 2) {
+						fieldCount += '<td contenteditable=true class="c">' + result[i][j] + '</td>';
+					} else if (j == 3) {
+						fieldCount += '<td contenteditable=true class="d">' + result[i][j] + '</td>';
+					} else {
+						fieldCount += '<td contenteditable=true class="e">' + result[i][j] + '</td></tr>';
+					}
+				}
+			}
+			//⑤配列の中身をテーブルタグの中に入れる→テーブル表示
+			document.getElementById('T_data').innerHTML = fieldCount;
+			//テーブルが表示されたら「追加」が表示される 
+			//display:blockにするとレイアウト崩れる
+			document.getElementById("save").style.display = "";
+			document.getElementById("T_lavel").style.display = "";
+			document.getElementById("row").style.display = "";
+			document.getElementById('row').innerHTML = "スペースを追加";
+		}
+
+		//*****************************************************************
+		// テーブルに新しい行を追加
+		//**************************************************************
+
+		function newRow() {
+			//表の値を取得
+			let table = document.getElementById('T_data');
+			//テーブルのテキスト要素に含まれるタグ文字を","に置き換える
+			let td_element = table.innerText.replace(/\t/g, ",");
+
+			// 改行を区切り文字として行を要素とした配列を生成
+			let tmp = td_element.split("\n");
+
+			let result = [];
+			// 各行ごとにカンマで区切った文字列を要素とした二次元配列を生成
+			for (let i = 0; i < tmp.length; ++i) {
+				result[i] = tmp[i].split(',');
+			}
+
+			let new_arr = [];
+			//配列の最初の行を複製する
+			new_arr = result[0].concat();
+			//配列の中身をカラにする
+			for (let i = 0; i < new_arr.length; ++i) {
+				new_arr[i] = "";
+			}
+			//配列の最後に新しい配列を追加する
+			let new_arr_row = result.length;
+			result[new_arr_row] = new_arr;
+			console.log(result);
+
+
+			//フィールドが入る空の配列
+			let fieldCount = [];
+
+			//行の最初に<tr>、最後に</tr>を加える
+			//contenteditable=true 編集可能
+			for (let i = 0; i < result.length; ++i) {
+				for (let j = 0; j < result[i].length; ++j) {
+					if (j == 0) {
+						fieldCount += '<tr><td contenteditable=true class="a">' + result[i][j] + '</td>';
+					} else if (j == 1) {
+						fieldCount += '<td contenteditable=true class="b">' + result[i][j] + '</td>';
+					} else if (j == 2) {
+						fieldCount += '<td contenteditable=true class="c">' + result[i][j] + '</td>';
+					} else if (j == 3) {
+						fieldCount += '<td contenteditable=true class="d">' + result[i][j] + '</td>';
+					} else {
+						fieldCount += '<td contenteditable=true class="e">' + result[i][j] + '</td></tr>';
+					}
+				}
+			}
+			//配列の中身をテーブルタグの中に入れる→テーブル表示
+			document.getElementById('T_data').innerHTML = fieldCount;
+		}
+
+
+
+
+		//*****************************************************************
+		// テーブル編集後、保存
+		//**************************************************************
+
+		function saveCsv() {
+
+			//⑥表の値を取得
+			let table = document.getElementById('T_data');
+			//テーブルのテキスト要素に含まれるタグ文字を","に置き換える
+			let td_element = table.innerText.replace(/\t/g, ",");
+			//半角&を全角＆に置き換える 
+			let td_result = td_element.replace(/\&/g, "＆");
+
+			// 改行を区切り文字として行を要素とした配列を生成
+			let tmp = td_result.split("\n");
+
+			let tmp2 = [];
+			// 各行ごとにカンマで区切った文字列を要素とした二次元配列を生成
+			for (let i = 0; i < tmp.length; ++i) {
+				tmp2[i] = tmp[i].split(',');
+			}
+
+			let result = [];
+			let newCnt=-1; //新しい配列の要素番号
+			for (let i = 0; i < tmp2.length; ++i) {
+				if (tmp2[i][0] !== "") {
+					newCnt++;
+					result[newCnt]=tmp2[i];
+				}
+			}
+		
+
+			//配列を改行コードを追加して、文字列として連結する
+			let result_str = result.join('\n');
+			console.log(result_str);
+
+			//inputタグのvalueに取得した表の配列を入れる
+			document.getElementById("send").value = result_str;
+			//フォームからデータを送る
+			document.post.submit();
+
+		}
+	</script>
+
+</body>
+
+</html>
+
+
+
+
+			<!-- // //値がない行を消去する
+			// for (let i = 0; i < result.length; ++i) {
+			// 	if (result[i][0] == "") {
+			// 		result.splice(i,1); //配列i番目から1個配列を取り除く
+			// 	}
+			// }
+			// console.log(result); -->
