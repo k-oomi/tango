@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <title>ログイン画面</title>
+    <style>
+        .error{
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>ログイン画面</h1>
+    <div><span class="error"><%= err_message %></span></div>
+    <form action="" method="POST">
+        ユーザー名<input type="text" name="username" value=""><br>
+        パスワード<input type="password" name="password" value=""><br>
+        <input type="submit" value="表示" name="send">
+    </form>
+    <a href="#">新規登録</a>
+    <br>
+    <!-- <button id="DBaccess" onclick="DBaccess();">表示する</button> -->
+</body>
+
+</html>
